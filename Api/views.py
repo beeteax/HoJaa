@@ -52,14 +52,12 @@ class FileUploadView(APIView):
     parser_classes = (FileUploadParser,)
 
     def put(self, request, format=None):
+        from time import gmtime, strftime
         file_obj = request.data['file']
         result=subprocess.run(['deepspeech',os.path.expanduser('~/speech/models/output_graph.pb'),
         os.path.expanduser('~/speech/out.wav'),os.path.expanduser('~/speech/models/alphabet.txt')],stdout=subprocess.PIPE)
         x=RemoteInput()
-        x.Address=result
-        x.Email=file_obj.size
-        x.FullBath=1
-        x.HalfBath=2
-        x.Bedrooms=1
+        x.Text=result
+        x.TimeStamp=strftime("%Y-%m-%d %H:%M:%S", gmtime())
         serializer=RemoteInputSerializer(x)
         return Response(serializer.data)
