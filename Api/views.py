@@ -57,15 +57,13 @@ class FileUploadView(APIView):
         from time import gmtime, strftime
         from django.core.files.storage import default_storage
         file_obj = request.data['file']
-        #path = default_storage.save(file_obj.path, ContentFile('new content'))        
-        #result=subprocess.run(['deepspeech',os.path.expanduser('~/speech/models/output_graph.pb'),
-        #file_obj.path ,os.path.expanduser('~/speech/models/alphabet.txt')],stdout=subprocess.PIPE)
         fs = FileSystemStorage()
         filename = fs.save(file_obj.name, file_obj)
         uploaded_file_url = fs.url(filename)
+        result=subprocess.run(['deepspeech',os.path.expanduser('~/speech/models/output_graph.pb'),
+        uploaded_file_url ,os.path.expanduser('~/speech/models/alphabet.txt')],stdout=subprocess.PIPE)
         x=RemoteInput()
-        x.Text="result.stdout"
-        x.TimeStamp=uploaded_file_url
-        #x.TimeStamp=strftime("%Y-%m-%d %H:%M:%S", gmtime())
+        x.Text=result.stdout
+        x.TimeStamp=strftime("%Y-%m-%d %H:%M:%S", gmtime())
         serializer=RemoteInputSerializer(x)
         return Response(serializer.data)
