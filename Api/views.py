@@ -53,9 +53,11 @@ class FileUploadView(APIView):
 
     def put(self, request, format=None):
         from time import gmtime, strftime
+        from django.core.files.storage import default_storage
         file_obj = request.data['file']
+        #path = default_storage.save(file_obj.path, ContentFile('new content'))        
         result=subprocess.run(['deepspeech',os.path.expanduser('~/speech/models/output_graph.pb'),
-        file_obj.temporary_file_path(),os.path.expanduser('~/speech/models/alphabet.txt')],stdout=subprocess.PIPE)
+        file_obj.path ,os.path.expanduser('~/speech/models/alphabet.txt')],stdout=subprocess.PIPE)
         x=RemoteInput()
         x.Text=result.stdout
         x.TimeStamp=file_obj.name
