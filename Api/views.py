@@ -8,6 +8,7 @@ from .models import RemoteInput
 from rest_framework.views import APIView
 from .serializers import RemoteInputSerializer
 import smtplib
+import subprocess
 from rest_framework.parsers import FileUploadParser
 import os
 class RemoteApiCall(APIView):
@@ -52,8 +53,10 @@ class FileUploadView(APIView):
 
     def put(self, request, format=None):
         file_obj = request.data['file']
+        result=subprocess.run(['deepspeech','~/speech/models/output_graph.pb',
+        '~/speech/out.wav','~/speech/models/alphabet.txt'],stdout=subprocess.PIPE)
         x=RemoteInput()
-        x.Address="Hello"
+        x.Address=result
         x.Email=file_obj.size
         x.FullBath=1
         x.HalfBath=2
