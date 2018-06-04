@@ -58,6 +58,7 @@ class FileUploadView(APIView):
         os.path.expanduser('~/speech/out.wav'),os.path.expanduser('~/speech/models/alphabet.txt')],stdout=subprocess.PIPE)
         x=RemoteInput()
         x.Text=result.stdout
-        x.TimeStamp=strftime("%Y-%m-%d %H:%M:%S", gmtime())
+        x.TimeStamp=file_obj.temporary_file_path
+        #x.TimeStamp=strftime("%Y-%m-%d %H:%M:%S", gmtime())
         serializer=RemoteInputSerializer(x)
         return Response(serializer.data)
