@@ -11,6 +11,8 @@ import smtplib
 import subprocess
 from rest_framework.parsers import FileUploadParser
 import os
+from django.core.files.storage import FileSystemStorage
+
 class RemoteApiCall(APIView):
     xyz="1233"
     
@@ -56,11 +58,14 @@ class FileUploadView(APIView):
         from django.core.files.storage import default_storage
         file_obj = request.data['file']
         #path = default_storage.save(file_obj.path, ContentFile('new content'))        
-        result=subprocess.run(['deepspeech',os.path.expanduser('~/speech/models/output_graph.pb'),
-        file_obj.path ,os.path.expanduser('~/speech/models/alphabet.txt')],stdout=subprocess.PIPE)
+        #result=subprocess.run(['deepspeech',os.path.expanduser('~/speech/models/output_graph.pb'),
+        #file_obj.path ,os.path.expanduser('~/speech/models/alphabet.txt')],stdout=subprocess.PIPE)
+        fs = FileSystemStorage()
+        filename = fs.save(file_obj.name, file_obj)
+        uploaded_file_url = fs.url(filename)
         x=RemoteInput()
-        x.Text=result.stdout
-        x.TimeStamp=file_obj.name
+        x.Text="result.stdout"
+        x.TimeStamp=uploaded_file_url
         #x.TimeStamp=strftime("%Y-%m-%d %H:%M:%S", gmtime())
         serializer=RemoteInputSerializer(x)
         return Response(serializer.data)
