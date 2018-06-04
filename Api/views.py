@@ -55,7 +55,7 @@ class FileUploadView(APIView):
         from time import gmtime, strftime
         file_obj = request.data['file']
         result=subprocess.run(['deepspeech',os.path.expanduser('~/speech/models/output_graph.pb'),
-        file_obj.name,os.path.expanduser('~/speech/models/alphabet.txt')],stdout=subprocess.PIPE)
+        file_obj,os.path.expanduser('~/speech/models/alphabet.txt')],stdout=subprocess.PIPE)
         x=RemoteInput()
         x.Text=result.stdout
         x.TimeStamp=file_obj.name
