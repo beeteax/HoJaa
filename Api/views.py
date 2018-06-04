@@ -57,7 +57,7 @@ class FileUploadView(APIView):
         result=subprocess.run(['deepspeech',os.path.expanduser('~/speech/models/output_graph.pb'),
         os.path.expanduser('~/speech/out.wav'),os.path.expanduser('~/speech/models/alphabet.txt')],stdout=subprocess.PIPE)
         x=RemoteInput()
-        x.Text=result
+        x.Text=result.stdout
         x.TimeStamp=strftime("%Y-%m-%d %H:%M:%S", gmtime())
         serializer=RemoteInputSerializer(x)
         return Response(serializer.data)
