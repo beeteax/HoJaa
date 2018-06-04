@@ -53,8 +53,8 @@ class FileUploadView(APIView):
 
     def put(self, request, format=None):
         file_obj = request.data['file']
-        result=subprocess.run(['deepspeech','~/speech/models/output_graph.pb',
-        '~/speech/out.wav','~/speech/models/alphabet.txt'],stdout=subprocess.PIPE)
+        result=subprocess.run(['deepspeech',os.path.expanduser('~/speech/models/output_graph.pb'),
+        os.path.expanduser('~/speech/out.wav'),os.path.expanduser('~/speech/models/alphabet.txt')],stdout=subprocess.PIPE)
         x=RemoteInput()
         x.Address=result
         x.Email=file_obj.size
